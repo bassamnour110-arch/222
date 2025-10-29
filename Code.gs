@@ -151,8 +151,23 @@ function syncProducts() {
       sku: sku.toString(),
       regular_price: row[headerMap['price']] ? row[headerMap['price']].toString() : '0',
       categories: [],
-      images: []
+      images: [],
+      status: 'publish' // وضعیت پیش‌فرض محصول
     };
+
+    // پردازش وضعیت انتشار (visible)
+    if ('visible' in headerMap) {
+      const visibility = row[headerMap['visible']];
+      // با تبدیل به عدد، هر دو حالت ورودی 0 و '0' به درستی کار می‌کنند.
+      if (Number(visibility) === 0) {
+        product.status = 'draft';
+      }
+    }
+
+    // پردازش توضیحات محصول
+    if ('description' in headerMap) {
+      product.description = row[headerMap['description']];
+    }
 
     // اختصاص دسته‌بندی
     const categoryName = ('product_cat' in headerMap) ? row[headerMap['product_cat']] : null;
